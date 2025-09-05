@@ -51,7 +51,7 @@ if ! kubectl get deployment attestation-admission-controller &>/dev/null; then
     exit 1
 fi
 
-if ! kubectl get validatingadmissionwebhooks attestation-admission-controller &>/dev/null; then
+if ! kubectl get validatingwebhookconfigurations attestation-admission-controller &>/dev/null; then
     echo "❌ ValidatingAdmissionWebhook is not configured. Run ./scripts/deploy.sh first"
     exit 1
 fi

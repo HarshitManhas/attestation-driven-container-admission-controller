@@ -53,7 +53,7 @@ kubectl apply -f tests/trusted-pod.yaml
 kubectl delete pod trusted-nginx-pod  # Clean up
 
 # Emergency webhook removal (if blocking all pods)
-kubectl delete validatingadmissionwebhooks attestation-admission-controller
+kubectl delete validatingwebhookconfigurations attestation-admission-controller
 ```
 
 ## Architecture Overview

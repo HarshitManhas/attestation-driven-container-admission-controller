@@ -58,11 +58,10 @@ CA_BUNDLE=$(base64 -w 0 < "$PROJECT_DIR/certs/ca-bundle.crt")
 # Create temporary webhook configuration with actual CA bundle
 cat > "$PROJECT_DIR/k8s/webhook-configuration-temp.yaml" <<EOF
 apiVersion: admissionregistration.k8s.io/v1
-kind: ValidatingAdmissionWebhook
+kind: ValidatingWebhookConfiguration
 metadata:
   name: attestation-admission-controller
-spec:
-  webhooks:
+webhooks:
   - name: attestation.admission.controller
     clientConfig:
       service:
@@ -104,5 +103,5 @@ echo "                                 curl -k https://localhost:8443/health"
 echo ""
 echo "🔍 Troubleshooting:"
 echo "   - View pod status:    kubectl get pods -l app=attestation-admission-controller"
-echo "   - View webhook config: kubectl get validatingadmissionwebhooks"
-echo "   - Delete webhook:     kubectl delete validatingadmissionwebhooks attestation-admission-controller"
+echo "   - View webhook config: kubectl get validatingwebhookconfigurations"
+echo "   - Delete webhook:     kubectl delete validatingwebhookconfigurations attestation-admission-controller"
