@@ -186,6 +186,6 @@ if __name__ == "__main__":
     app.run(
         host="0.0.0.0",
         port=8443,
-        ssl_context="/certs/tls.crt",  # Will be mounted in Kubernetes
+        ssl_context=("/certs/tls.crt", "/certs/tls.key"),  # Certificate and key files
         debug=False
     )
