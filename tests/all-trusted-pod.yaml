@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: all-trusted-pod
+  namespace: default
+  labels:
+    app: test-all-trusted
+spec:
+  initContainers:
+  - name: init-busybox
+    image: busybox:latest  # Trusted image
+    command: ['sh', '-c', 'echo "Initialization complete"']
+  containers:
+  - name: nginx
+    image: nginx:latest  # Trusted image
+    ports:
+    - containerPort: 80
+  - name: alpine
+    image: alpine:latest  # Trusted image
+    command: ['sleep', '3600']
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "200m"

@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: untrusted-redis-pod
+  namespace: default
+  labels:
+    app: test-untrusted
+spec:
+  containers:
+  - name: redis
+    image: redis:6.2  # This image is NOT in our trusted list
+    ports:
+    - containerPort: 6379
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "50m"
+      limits:
+        memory: "128Mi"
+        cpu: "100m"

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: attestation-admission-controller
+  namespace: default
+  labels:
+    app: attestation-admission-controller
+spec:
+  type: ClusterIP
+  ports:
+  - port: 443
+    targetPort: 8443
+    protocol: TCP
+    name: webhook-api
+  selector:
+    app: attestation-admission-controller

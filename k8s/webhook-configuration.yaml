@@ -1,0 +1,32 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionWebhook
+metadata:
+  name: attestation-admission-controller
+spec:
+  webhooks:
+  - name: attestation.admission.controller
+    clientConfig:
+      service:
+        name: attestation-admission-controller
+        namespace: default
+        path: "/validate"
+      # CA bundle will be replaced by the setup script
+      caBundle: LS0tLS1CRUdJTi... # Placeholder - replace with actual CA bundle
+    rules:
+    - operations: ["CREATE"]
+      apiGroups: [""]
+      apiVersions: ["v1"]
+      resources: ["pods"]
+    admissionReviewVersions: ["v1", "v1beta1"]
+    sideEffects: None
+    failurePolicy: Fail
+    # Optional: exclude system namespaces
+    namespaceSelector:
+      matchExpressions:
+      - key: name
+        operator: NotIn
+        values: 
+        - kube-system
+        - kube-public
+        - kube-node-lease
+        - default  # Remove this line if you want to test in default namespace

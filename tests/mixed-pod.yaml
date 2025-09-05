@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mixed-containers-pod
+  namespace: default
+  labels:
+    app: test-mixed
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest  # This image is trusted
+    ports:
+    - containerPort: 80
+  - name: mysql
+    image: mysql:8.0   # This image is NOT trusted
+    ports:
+    - containerPort: 3306
+    env:
+    - name: MYSQL_ROOT_PASSWORD
+      value: "example"
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "200m"
