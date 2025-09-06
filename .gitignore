@@ -133,3 +133,6 @@ Thumbs.db
 # Kubernetes temp files
 k8s/*-temp.yaml
 k8s/temp-*.yaml
+
+
+WARP.md
