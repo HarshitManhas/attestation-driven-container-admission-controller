@@ -86,29 +86,6 @@ This project has evolved into two distinct implementations:
 - ✅ **Comprehensive Testing**: Includes test pods for various scenarios
 - ✅ **Easy Deployment**: Automated scripts for setup and teardown
 
-## 🔄 **Detailed Branch Comparison**
-
-| Feature | Original Branch (`main`) | Real Attestation Branch (Current) |
-|---------|--------------------------|-----------------------------------|
-| **Image Verification** | Mock (string matching) | 🎆 **Real Cosign signatures** |
-| **Setup Complexity** | Simple (5 minutes) | Moderate (10 minutes) |
-| **Dependencies** | Python, Flask, OpenSSL | + Cosign, Cryptography libs |
-| **Policy Management** | Hard-coded Python list | 🎆 **Flexible YAML policies** |
-| **API Endpoints** | Basic (`/health`, `/trusted-images`) | 🎆 **Full management suite** |
-| **Performance** | Fast (in-memory) | 🎆 **Cached (5-min TTL)** |
-| **Security Level** | Basic admission control | 🎆 **Enterprise-grade** |
-| **Image Signing** | Not supported | 🎆 **Complete toolkit** |
-| **Emergency Bypass** | Manual kubectl only | 🎆 **Policy-based + API** |
-| **Production Ready** | Demo/Learning | 🎆 **Yes, fully ready** |
-| **Configuration** | Edit code + redeploy | 🎆 **Live policy reload** |
-| **Transparency Logs** | Not supported | 🎆 **Rekor integration** |
-| **SLSA Provenance** | Not supported | 🎆 **Full support** |
-| **Certificate Management** | Basic self-signed | 🎆 **Advanced + chains** |
-| **Namespace Policies** | Global only | 🎆 **Per-namespace rules** |
-| **Image Pattern Rules** | Not supported | 🎆 **Wildcard matching** |
-| **Caching System** | None | 🎆 **TTL-based caching** |
-| **Monitoring** | Basic logs | 🎆 **Comprehensive metrics** |
-| **Documentation** | Basic README | 🎆 **Complete guides** |
 
 ### 🔄 **Migration Path**
 
