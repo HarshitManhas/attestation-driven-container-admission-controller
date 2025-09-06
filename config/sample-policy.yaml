@@ -1,0 +1,132 @@
+version: "1.0"
+last_updated: "2024-01-01T00:00:00Z"
+
+# Global policy settings that apply by default
+global:
+  # Whether to require signatures by default
+  default_require_signature: true
+  
+  # Default allowed registries (if not specified, all registries are allowed)
+  default_allowed_registries:
+    - "docker.io"
+    - "gcr.io"
+    - "quay.io"
+    - "ghcr.io"
+  
+  # Default allowed signers (email addresses or key fingerprints)
+  default_allowed_signers:
+    - "security@company.com"
+    - "ci-system@company.com"
+  
+  # Require transparency log entries (Rekor)
+  require_transparency_log: true
+  
+  # Require certificate chains to be validated
+  require_certificate_chain: false
+  
+  # Minimum SLSA (Supply-chain Levels for Software Artifacts) level
+  min_slsa_level: 1
+  
+  # Require SLSA provenance attestations
+  require_provenance: false
+  
+  # Namespaces exempt from attestation requirements
+  exempt_namespaces:
+    - "kube-system"
+    - "kube-public"
+    - "kube-node-lease"
+    - "local-path-storage"  # For local development
+  
+  # Image patterns exempt from attestation requirements
+  exempt_images:
+    - "pause:*"
+    - "coredns:*"
+    - "kindest/*"  # Kind node images
+    - "k8s.gcr.io/pause:*"
+  
+  # Emergency bypass settings
+  emergency_bypass: false
+  emergency_bypass_token: "emergency-token-change-me"
+
+# Namespace-specific policies (override global settings)
+namespaces:
+  # Production namespace - strictest requirements
+  - namespace: "production"
+    require_signature: true
+    allowed_signers:
+      - "production-release@company.com"
+      - "security@company.com"
+    allowed_registries:
+      - "gcr.io/company-prod"
+      - "quay.io/company"
+    require_transparency_log: true
+    min_slsa_level: 3
+    require_provenance: true
+  
+  # Staging namespace - moderate requirements
+  - namespace: "staging"
+    require_signature: true
+    allowed_signers:
+      - "staging@company.com"
+      - "ci-system@company.com"
+    require_transparency_log: true
+    min_slsa_level: 2
+    require_provenance: false
+  
+  # Development namespace - relaxed requirements
+  - namespace: "development"
+    require_signature: false
+    allowed_registries:
+      - "localhost:5000"
+      - "docker.io"
+      - "gcr.io"
+  
+  # Testing namespace - no requirements
+  - namespace: "testing"
+    require_signature: false
+
+# Image-specific policies (highest priority overrides)
+images:
+  # Critical infrastructure images
+  - image_pattern: "nginx:*"
+    require_signature: true
+    allowed_signers:
+      - "nginx-maintainer@nginx.org"
+      - "f1cc229276bfb6ca8ac367e5cdc5eb7b0f7ba00d"  # Key fingerprint example
+    priority: 100
+    description: "Official nginx images must be signed"
+  
+  - image_pattern: "postgres:*"
+    require_signature: true
+    allowed_signers:
+      - "postgres-team@postgresql.org"
+    priority: 100
+    description: "Official postgres images must be signed"
+  
+  # Company-specific images
+  - image_pattern: "company.registry.io/app/*"
+    require_signature: true
+    allowed_signers:
+      - "app-team@company.com"
+    priority: 90
+    description: "All company application images must be signed"
+  
+  # Development images from local registry
+  - image_pattern: "localhost:5000/*"
+    require_signature: false
+    priority: 50
+    description: "Local development registry - no signature required"
+  
+  # Third-party trusted images
+  - image_pattern: "redis:*"
+    require_signature: true
+    allowed_signers:
+      - "redis-maintainer@redis.io"
+    priority: 80
+    description: "Redis images should be signed"
+  
+  # Allow unsigned images for specific patterns (emergency cases)
+  - image_pattern: "emergency/*"
+    require_signature: false
+    priority: 200
+    description: "Emergency images bypass - use with caution"

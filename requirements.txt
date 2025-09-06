@@ -3,3 +3,12 @@ gunicorn==21.2.0
 PyYAML==6.0.1
 sigstore==3.5.0
 requests==2.31.0
+# Real attestation dependencies
+cosign==2.2.4
+containerregistry==0.20.2
+cryptography==41.0.7
+pyjwt==2.8.0
+ecdsa==0.18.0
+rsa==4.9
+hashlib-compat==1.0.1
+cachetools==5.3.2

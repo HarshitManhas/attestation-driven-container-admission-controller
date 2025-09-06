@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: attestation-config
+  namespace: default
+  labels:
+    app: attestation-admission-controller
+data:
+  # Default policy configuration - can be customized per deployment
+  policy.yaml: |
+    version: "1.0"
+    last_updated: "2024-01-01T00:00:00Z"
+
+    # Global policy settings
+    global:
+      default_require_signature: false  # Set to false for initial testing
+      require_transparency_log: true
+      require_certificate_chain: false
+      min_slsa_level: 0
+      require_provenance: false
+      
+      # Exempt system namespaces
+      exempt_namespaces:
+        - "kube-system"
+        - "kube-public"
+        - "kube-node-lease"
+        - "local-path-storage"
+      
+      # Exempt system images
+      exempt_images:
+        - "pause:*"
+        - "coredns:*"
+        - "kindest/*"
+        - "k8s.gcr.io/pause:*"
+      
+      # Emergency bypass (disabled by default)
+      emergency_bypass: false
+      emergency_bypass_token: "change-me-in-production"
+
+    # Namespace-specific policies
+    namespaces:
+      # Development namespace - no requirements for testing
+      - namespace: "development"
+        require_signature: false
+      
+      # Testing namespace - no requirements
+      - namespace: "testing"
+        require_signature: false
+      
+      # Default namespace - basic requirements
+      - namespace: "default"
+        require_signature: false  # Start with false for testing
+
+    # Image-specific policies
+    images:
+      # Allow local development images
+      - image_pattern: "localhost:5000/*"
+        require_signature: false
+        priority: 50
+        description: "Local development registry"
+      
+      # Standard images for testing - start permissive
+      - image_pattern: "nginx:*"
+        require_signature: false  # Set to true once you have signed images
+        priority: 10
+        description: "Nginx images"
+      
+      - image_pattern: "alpine:*"
+        require_signature: false
+        priority: 10
+        description: "Alpine images"
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cosign-config
+  namespace: default
+  labels:
+    app: attestation-admission-controller
+data:
+  # Sample public key - replace with your actual public key
+  cosign.pub: |
+    -----BEGIN PUBLIC KEY-----
+    # Replace this with your actual Cosign public key
+    # Generate with: cosign generate-key-pair
+    # This is just a placeholder
+    MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE...
+    -----END PUBLIC KEY-----
