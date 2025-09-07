@@ -13,7 +13,7 @@ echo "=================================================="
 
 # Remove ValidatingAdmissionWebhook (this is critical - do this first)
 echo "1. Removing ValidatingAdmissionWebhook..."
-kubectl delete validatingadmissionwebhooks attestation-admission-controller --ignore-not-found=true
+kubectl delete validatingwebhookconfigurations attestation-admission-controller --ignore-not-found=true
 echo "✅ ValidatingAdmissionWebhook removed"
 
 # Remove deployment
