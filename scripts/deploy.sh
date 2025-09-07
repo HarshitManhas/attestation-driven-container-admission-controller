@@ -8,7 +8,7 @@ set -e
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 
-echo "🚀 Deploying Attestation-Driven Container Admission Controller"
+echo " Deploying Attestation-Driven Container Admission Controller"
 echo "=================================================="
 
 # Check if minikube is running
@@ -18,28 +18,28 @@ if ! minikube status | grep -q "Running"; then
     echo "   minikube start"
     exit 1
 fi
-echo "✅ Minikube is running"
+echo " Minikube is running"
 
 # Switch to minikube docker environment
 echo "2. Configuring Docker environment for Minikube..."
 eval $(minikube docker-env)
-echo "✅ Docker environment configured"
+echo " Docker environment configured"
 
 # Build the Docker image
 echo "3. Building Docker image..."
 cd "$PROJECT_DIR"
 docker build -t attestation-admission-controller:latest .
-echo "✅ Docker image built"
+echo " Docker image built"
 
 # Generate certificates
 echo "4. Generating SSL certificates..."
 "$SCRIPT_DIR/generate-certs.sh"
-echo "✅ Certificates generated"
+echo " Certificates generated"
 
 # Deploy the webhook certificates secret
 echo "5. Deploying webhook certificates..."
 kubectl apply -f "$PROJECT_DIR/certs/webhook-certs.yaml"
-echo "✅ Certificates deployed"
+echo " Certificates deployed"
 
 # Deploy the webhook service and deployment
 echo "6. Deploying webhook service and deployment..."
@@ -49,7 +49,7 @@ kubectl apply -f "$PROJECT_DIR/k8s/deployment.yaml"
 # Wait for deployment to be ready
 echo "7. Waiting for deployment to be ready..."
 kubectl wait --for=condition=available --timeout=300s deployment/attestation-admission-controller
-echo "✅ Deployment is ready"
+echo " Deployment is ready"
 
 # Update webhook configuration with the correct CA bundle
 echo "8. Configuring ValidatingAdmissionWebhook..."
@@ -89,19 +89,19 @@ EOF
 
 kubectl apply -f "$PROJECT_DIR/k8s/webhook-configuration-temp.yaml"
 rm "$PROJECT_DIR/k8s/webhook-configuration-temp.yaml"
-echo "✅ ValidatingAdmissionWebhook configured"
+echo " ValidatingAdmissionWebhook configured"
 
 echo ""
 echo "🎉 Deployment completed successfully!"
 echo ""
-echo "📋 Next steps:"
+echo " Next steps:"
 echo "   1. Test with trusted image:   kubectl apply -f tests/trusted-pod.yaml"
 echo "   2. Test with untrusted image: kubectl apply -f tests/untrusted-pod.yaml"
 echo "   3. View webhook logs:         kubectl logs -l app=attestation-admission-controller -f"
 echo "   4. Check webhook health:      kubectl port-forward svc/attestation-admission-controller 8443:443"
 echo "                                 curl -k https://localhost:8443/health"
 echo ""
-echo "🔍 Troubleshooting:"
+echo " Troubleshooting:"
 echo "   - View pod status:    kubectl get pods -l app=attestation-admission-controller"
 echo "   - View webhook config: kubectl get validatingwebhookconfigurations"
 echo "   - Delete webhook:     kubectl delete validatingwebhookconfigurations attestation-admission-controller"
