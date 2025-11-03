@@ -24,7 +24,8 @@ TRUSTED_IMAGES = {
     "alpine:latest",
     "python:3.9-slim",
     "busybox:latest",
-    "hello-world:latest"
+    "hello-world:latest",
+    "curlimages/curl"
 }
 
 class AdmissionController:
